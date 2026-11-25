@@ -1,0 +1,960 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta property="og:title" content="Mannmeet Singh Khasria · Portfolio">
+<meta property="og:description" content="Developer aus Düren. Swipe dich durch meine Projekte, Hackathons und Werkzeuge.">
+<meta property="og:type" content="website">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}[hidden]{display:none!important}</style>
+<title>Mannmeet Singh Portfolio</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Mannmeet Singh Khasria, Developer aus Düren: Projekte, Hackathons und Werkzeuge. Informatik an der FH Aachen, Werkstudent bei SOPTIM.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+:root {
+  /* Layout: horizontales Swipe-Deck, ein Kapitel pro Bildschirm. Start = großer Name, der auf den Cursor reagiert, plus tippendes Terminal. */
+  --bg: #ECEEF4;
+  --dot: #D5D9E6;
+  --surface: #FFFFFF;
+  --surface-2: #E3E7F2;
+  --ink: #121626;
+  --muted: #565D76;
+  --line: #D3D8E6;
+  --accent: #2A47E8;
+  --accent-soft: #DEE4FE;
+  --on-accent: #FFFFFF;
+  --gold: #85600F;
+  --gold-soft: #F3E6CC;
+  --shadow: 224 45% 12%;
+  --code-bg: #121831;
+  --code-fg: #DCE2F6;
+  --code-dim: #8089AA;
+  --code-key: #A4B3FF;
+  --code-str: #E8C88A;
+
+  --font-display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Figtree", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "Cascadia Code", Consolas, monospace;
+
+  /* Bon-Papier: in beiden Themes gleich */
+  --paper: #FFFDF7; --paper-ink: #1B1B1F;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0B0E19; --dot: #181D30; --surface: #141A2B; --surface-2: #1C2338; --ink: #E8EBF5; --muted: #A0A8C2;
+    --line: #283050; --accent: #8396FF; --accent-soft: #212B55; --on-accent: #0B0E19; --gold: #E0B76A; --gold-soft: #382D18;
+    --shadow: 230 60% 2%; --code-bg: #0E1325; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0B0E19; --dot: #181D30; --surface: #141A2B; --surface-2: #1C2338; --ink: #E8EBF5; --muted: #A0A8C2;
+  --line: #283050; --accent: #8396FF; --accent-soft: #212B55; --on-accent: #0B0E19; --gold: #E0B76A; --gold-soft: #382D18;
+  --shadow: 230 60% 2%; --code-bg: #0E1325; color-scheme: dark;
+}
+
+html { box-sizing: border-box; height: 100%; }
+*, *::before, *::after { box-sizing: inherit; }
+body {
+  height: 100%; margin: 0; overflow: hidden;
+  background-color: var(--bg);
+  background-image: radial-gradient(var(--dot) 1px, transparent 1.4px);
+  background-size: 24px 24px;
+  color: var(--ink); font-family: var(--font-body); font-size: 16px; line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+button { font: inherit; color: inherit; cursor: pointer; }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; border-radius: 8px; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+.app { height: 100%; display: flex; flex-direction: column; }
+
+/* ---------- Eigener Cursor (nur mit Maus) ---------- */
+.cursor { position: fixed; inset: 0; z-index: 50; pointer-events: none; display: none; transition: opacity .2s; }
+.has-cursor .cursor { display: block; }
+.has-cursor, .has-cursor * { cursor: none !important; }
+.cursor.is-hidden { opacity: 0; }
+.cursor-dot, .cursor-ring { position: absolute; top: 0; left: 0; border-radius: 50%; will-change: transform; }
+.cursor-dot { width: 8px; height: 8px; margin: -4px 0 0 -4px; background: var(--accent); transition: opacity .2s; }
+.cursor-ring {
+  width: 38px; height: 38px; margin: -19px 0 0 -19px;
+  display: grid; place-items: center;
+  border: 1.5px solid color-mix(in srgb, var(--accent) 70%, transparent);
+  transition: width .35s cubic-bezier(.2, .8, .2, 1), height .35s cubic-bezier(.2, .8, .2, 1), margin .35s cubic-bezier(.2, .8, .2, 1),
+              background-color .3s, border-color .3s, scale .15s;
+}
+.cursor-label {
+  font-family: var(--font-mono); font-size: .66rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--on-accent); white-space: nowrap; opacity: 0; transition: opacity .2s;
+}
+.cursor.is-link .cursor-ring { width: 60px; height: 60px; margin: -30px 0 0 -30px; background: color-mix(in srgb, var(--accent) 14%, transparent); border-color: var(--accent); }
+.cursor.is-link .cursor-dot { opacity: 0; }
+.cursor.is-lens .cursor-ring { width: 132px; height: 132px; margin: -66px 0 0 -66px; border-color: color-mix(in srgb, var(--accent) 40%, transparent); }
+.cursor.is-label .cursor-ring { width: 88px; height: 88px; margin: -44px 0 0 -44px; background: var(--accent); border-color: var(--accent); }
+.cursor.is-label .cursor-label { opacity: 1; }
+.cursor.is-label .cursor-dot { opacity: 0; }
+.cursor.is-down .cursor-ring { scale: .86; }
+
+/* ---------- Kopfzeile ---------- */
+.topbar {
+  flex: none; display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding-block: 12px 4px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.brand {
+  display: inline-flex; align-items: center; gap: 10px; padding: 4px 12px 4px 4px; border: 0; background: none;
+  border-radius: 999px; font-family: var(--font-display); font-weight: 700; font-size: 1.02rem; letter-spacing: -.01em;
+}
+.brand-mark {
+  width: 38px; height: 38px; flex: none; display: grid; place-items: center; border-radius: 50%;
+  background: var(--accent); color: var(--on-accent);
+  font-family: var(--font-display); font-weight: 800; font-size: .74rem; letter-spacing: -.02em;
+}
+.progress {
+  margin: 0; display: flex; align-items: baseline; gap: 6px;
+  font-family: var(--font-mono); font-size: .8rem; color: var(--muted); font-variant-numeric: tabular-nums;
+}
+.progress b { color: var(--ink); font-weight: 600; }
+.progress-label { margin-left: 6px; padding-left: 10px; border-left: 1px solid var(--line); color: var(--ink); }
+@media (max-width: 420px) { .progress-label { display: none; } }
+
+/* ---------- Deck ---------- */
+.deck {
+  flex: 1; min-height: 0; display: flex;
+  overflow-x: auto; overflow-y: hidden;
+  scroll-snap-type: x mandatory; scroll-behavior: smooth;
+  overscroll-behavior-x: contain; scrollbar-width: none;
+}
+.deck::-webkit-scrollbar { display: none; }
+.deck.dragging { scroll-snap-type: none; scroll-behavior: auto; cursor: grabbing; user-select: none; }
+.panel {
+  flex: 0 0 100%; width: 100%; height: 100%; min-width: 0;
+  overflow-y: auto; overscroll-behavior-y: contain;
+  scrollbar-width: thin; scrollbar-color: var(--line) transparent;
+  scroll-snap-align: start; scroll-snap-stop: always;
+  padding-block: 8px 28px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.panel-inner {
+  max-width: 1100px; min-height: 100%; margin-inline: auto;
+  display: flex; flex-direction: column; justify-content: center; gap: clamp(20px, 3vw, 34px);
+}
+
+/* ---------- Typo ---------- */
+.eyebrow { margin: 0; font-family: var(--font-mono); font-size: .82rem; font-weight: 500; color: var(--accent); letter-spacing: .02em; }
+.h2 {
+  margin: 0; font-family: var(--font-display); font-weight: 700;
+  font-size: clamp(1.9rem, 4.6vw, 3.4rem); line-height: 1.02; letter-spacing: -.03em; text-wrap: balance;
+}
+.lead { margin: 0; font-size: clamp(1.02rem, 1.3vw, 1.12rem); line-height: 1.65; color: var(--muted); max-width: 62ch; }
+.lead strong { color: var(--ink); font-weight: 600; }
+.stack { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.todo { text-decoration: underline dashed var(--gold) 1.5px; text-underline-offset: 4px; }
+
+/* ---------- Start ---------- */
+.hero-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 28px; align-items: center; }
+@media (min-width: 900px) { .hero-grid { grid-template-columns: minmax(0, 1.2fr) minmax(0, .8fr); gap: clamp(32px, 5vw, 72px); } }
+.hero-copy { display: flex; flex-direction: column; gap: 20px; min-width: 0; }
+.name {
+  margin: 0; font-family: var(--font-display); font-weight: 800;
+  font-size: clamp(2.8rem, 8.6vw, 6.6rem); line-height: .9; letter-spacing: -.045em;
+}
+.name-line { display: block; white-space: nowrap; }
+.name .last { color: var(--accent); }
+.hero-lead { margin: 0; max-width: 44ch; font-size: clamp(1.05rem, 1.5vw, 1.22rem); line-height: 1.6; color: var(--muted); }
+.hero-lead strong { color: var(--ink); font-weight: 600; }
+.cta-row { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 18px; margin-top: 4px; }
+.hero .eyebrow { animation: rise-in .6s .1s cubic-bezier(.2, .8, .2, 1) both; }
+.hero .name-line { animation: rise-in .8s .18s cubic-bezier(.2, .8, .2, 1) both; }
+.hero .name-line.last { animation-delay: .28s; }
+.hero .name-line:nth-child(3) { animation-delay: .38s; }
+.hero .hero-lead { animation: rise-in .7s .4s cubic-bezier(.2, .8, .2, 1) both; }
+.hero .cta-row { animation: rise-in .7s .5s cubic-bezier(.2, .8, .2, 1) both; }
+.hero .terminal { animation: rise-in .8s .55s cubic-bezier(.2, .8, .2, 1) both; }
+@keyframes rise-in { from { opacity: 0; transform: translateY(28px); } }
+
+.terminal { min-width: 0; }
+.term-body {
+  padding: 18px 20px 22px; min-height: calc(9 * 1.8em + 40px);
+  font-family: var(--font-mono); font-size: clamp(.78rem, 1.05vw, .9rem); line-height: 1.8;
+}
+.term-body > div { white-space: pre-wrap; overflow-wrap: anywhere; }
+.t-prompt { color: var(--code-key); }
+.t-cmd { color: var(--code-fg); }
+.t-out { color: var(--code-dim); margin-bottom: 6px; }
+.t-out.t-tight { margin-bottom: 0; }
+.t-hash { color: var(--code-str); }
+.t-hl { color: var(--code-str); }
+.t-caret {
+  display: inline-block; width: .6em; height: 1.15em; vertical-align: -.22em;
+  background: var(--code-fg); animation: caret 1s steps(1) infinite;
+}
+@keyframes caret { 50% { opacity: 0; } }
+
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 10px; padding: 14px 22px; border: 0; border-radius: 999px;
+  background: var(--accent); color: var(--on-accent); font-weight: 700; font-size: 1rem;
+  box-shadow: 0 14px 30px -18px var(--accent);
+}
+.btn-primary svg { transition: transform .2s ease; }
+.btn-primary:hover svg { transform: translateX(4px); }
+.hint-pulse .hero .btn-primary { animation: ring 2.4s ease-out infinite; }
+@keyframes ring {
+  0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 45%, transparent); }
+  70%, 100% { box-shadow: 0 0 0 14px color-mix(in srgb, var(--accent) 0%, transparent); }
+}
+.btn-ghost {
+  display: inline-flex; align-items: center; gap: 8px; padding: 11px 18px; border-radius: 999px;
+  border: 1px solid var(--line); background: var(--surface); font-weight: 600;
+}
+.btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+
+.swipe-hint { display: inline-flex; align-items: center; gap: 10px; font-size: .92rem; color: var(--muted); }
+.sh-track { position: relative; width: 56px; height: 26px; border-radius: 999px; border: 1.5px dashed var(--line); }
+.sh-dot {
+  position: absolute; top: 50%; right: 4px; width: 16px; height: 16px; margin-top: -8px; border-radius: 50%;
+  background: var(--accent); animation: swipe 1.9s ease-in-out infinite;
+}
+@keyframes swipe {
+  0% { transform: translateX(0); opacity: 0; } 15% { opacity: 1; }
+  70% { transform: translateX(-30px); opacity: 1; } 100% { transform: translateX(-30px); opacity: 0; }
+}
+
+/* ---------- Über mich ---------- */
+.about { display: grid; grid-template-columns: minmax(0, 1fr); gap: 28px; align-items: center; }
+@media (min-width: 900px) { .about { grid-template-columns: minmax(0, 1.12fr) minmax(0, .88fr); gap: 56px; } }
+.code-card {
+  min-width: 0; overflow: hidden; border-radius: 18px;
+  background: var(--code-bg); color: var(--code-fg);
+  border: 1px solid color-mix(in srgb, var(--code-fg) 10%, transparent);
+  box-shadow: 0 30px 60px -40px hsl(var(--shadow) / .9);
+}
+.code-head {
+  display: flex; align-items: center; gap: 7px; padding: 12px 16px;
+  border-bottom: 1px solid color-mix(in srgb, var(--code-fg) 10%, transparent);
+  font-family: var(--font-mono); font-size: .76rem; color: var(--code-dim);
+}
+.code-head i { width: 10px; height: 10px; border-radius: 50%; background: color-mix(in srgb, var(--code-fg) 20%, transparent); }
+.code-head span { margin-left: 8px; }
+.code-card pre {
+  margin: 0; padding: 18px 18px 22px; overflow-x: auto;
+  font-family: var(--font-mono); font-size: clamp(.74rem, 1.05vw, .86rem); line-height: 1.75;
+}
+.code-card .k { color: var(--code-key); }
+.code-card .s { color: var(--code-str); }
+.code-card .p { color: var(--code-dim); }
+
+/* ---------- Projekte ---------- */
+.proj-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; }
+@media (min-width: 760px) { .proj-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.proj, .hack {
+  min-width: 0; display: flex; flex-direction: column; gap: 10px;
+  padding: 20px 22px; border-radius: 20px; background: var(--surface); border: 1px solid var(--line);
+  transition: border-color .2s, transform .2s;
+}
+.proj:hover, .hack:hover { border-color: color-mix(in srgb, var(--accent) 55%, var(--line)); transform: translateY(-2px); }
+.proj-top {
+  margin: 0; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 4px 12px;
+  font-family: var(--font-mono); font-size: .74rem; color: var(--muted);
+}
+.proj h3, .hack h3 { margin: 0; font-family: var(--font-display); font-size: 1.4rem; font-weight: 700; letter-spacing: -.02em; line-height: 1.12; text-wrap: balance; }
+.proj p:not(.proj-top), .hack p:not(.proj-top) { margin: 0; color: var(--muted); line-height: 1.55; font-size: .96rem; }
+.tech { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 2px; }
+.tech span { font-family: var(--font-mono); font-size: .72rem; padding: 4px 9px; border-radius: 999px; border: 1px solid var(--line); }
+.proj-link {
+  margin-top: auto; padding-top: 4px; align-self: flex-start; display: inline-flex; align-items: center; gap: 6px;
+  font-weight: 600; color: var(--accent); text-decoration-line: none;
+}
+.proj-link:hover { text-decoration-line: underline; text-underline-offset: 3px; }
+
+/* ---------- Projekte im Detail ---------- */
+.feature-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; }
+@media (min-width: 900px) { .feature-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.feature { min-width: 0; display: flex; flex-direction: column; gap: 12px; padding: 24px; border-radius: 22px; background: var(--surface); border: 1px solid var(--line); }
+.feature h3 { margin: 0; font-family: var(--font-display); font-size: 1.8rem; font-weight: 700; letter-spacing: -.025em; line-height: 1.05; }
+.feature > p:not(.proj-top):not(.under-hood) { margin: 0; color: var(--muted); line-height: 1.55; }
+.under-hood { margin: 4px 0 0; font-family: var(--font-mono); font-size: .72rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+.hood { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.hood li { position: relative; padding-left: 18px; font-size: .93rem; line-height: 1.5; }
+.hood li::before {
+  content: ""; position: absolute; left: 2px; top: .55em; width: 7px; height: 7px; border-radius: 2px;
+  background: var(--accent); transform: rotate(45deg);
+}
+.hood strong { font-weight: 600; }
+.hood code { font-family: var(--font-mono); font-size: .84em; padding: 1px 5px; border-radius: 5px; background: var(--surface-2); }
+.repo-private { margin-top: auto; padding-top: 4px; display: inline-flex; align-items: center; gap: 6px; font-family: var(--font-mono); font-size: .76rem; color: var(--muted); }
+
+/* ---------- GitHub ---------- */
+.repo-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; }
+@media (min-width: 640px) { .repo-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 1000px) { .repo-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+.repo {
+  min-width: 0; display: flex; flex-direction: column; gap: 8px; padding: 18px 20px; border-radius: 16px;
+  background: var(--surface); border: 1px solid var(--line); color: inherit; text-decoration-line: none;
+  transition: border-color .2s, transform .2s;
+}
+.repo:hover { border-color: var(--accent); transform: translateY(-2px); }
+.repo-name { display: flex; align-items: center; gap: 8px; font-family: var(--font-mono); font-size: .95rem; font-weight: 600; color: var(--accent); overflow-wrap: anywhere; }
+.repo-name svg { flex: none; color: var(--muted); }
+.repo p { margin: 0; color: var(--muted); font-size: .92rem; line-height: 1.5; }
+.repo-meta { margin-top: auto; display: flex; flex-wrap: wrap; gap: 4px 14px; font-family: var(--font-mono); font-size: .74rem; color: var(--muted); }
+.lang { display: inline-flex; align-items: center; gap: 6px; }
+.lang::before { content: ""; width: 10px; height: 10px; border-radius: 50%; background: var(--lang, var(--muted)); }
+.repo-all { justify-content: center; background: var(--accent-soft); border-color: transparent; }
+.repo-all strong { font-family: var(--font-display); font-size: 1.35rem; font-weight: 700; color: var(--ink); }
+.repo-all .proj-link { margin-top: 0; padding-top: 0; }
+
+/* ---------- Hackathons ---------- */
+.hack-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; }
+@media (min-width: 860px) { .hack-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.hack { gap: 12px; padding: 24px; border-radius: 22px; }
+.hack h3 { font-size: 1.55rem; }
+.hack-badge {
+  align-self: flex-start; display: inline-flex; align-items: center; gap: 6px; padding: 5px 11px 5px 9px; border-radius: 999px;
+  background: var(--gold-soft); color: var(--gold); font-family: var(--font-mono); font-size: .74rem; font-weight: 600;
+}
+.stats { display: flex; flex-wrap: wrap; gap: 10px 30px; margin: 2px 0; }
+.stats > div { display: flex; flex-direction: column; gap: 2px; }
+.stats strong { font-family: var(--font-display); font-size: 2rem; font-weight: 800; letter-spacing: -.03em; line-height: 1; color: var(--accent); font-variant-numeric: tabular-nums; }
+.stats span { font-size: .82rem; color: var(--muted); }
+
+/* ---------- Skills ---------- */
+.section-head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 14px 28px; }
+.legend { margin: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: .9rem; color: var(--muted); }
+.skills-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; align-items: start; }
+@media (min-width: 620px) { .skills-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 1040px) { .skills-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+.skill-group { min-width: 0; display: flex; flex-direction: column; gap: 12px; padding: 18px; border-radius: 18px; background: var(--surface); border: 1px solid var(--line); }
+.skill-group h3 {
+  margin: 0; font-family: var(--font-mono); font-size: .74rem; font-weight: 600;
+  letter-spacing: .08em; text-transform: uppercase; color: var(--muted);
+}
+.chips { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+.chips li, .chip-job { padding: 5px 10px; border-radius: 999px; border: 1px solid var(--line); font-family: var(--font-mono); font-size: .76rem; }
+.chips li.is-job, .chip-job { background: var(--accent-soft); border-color: transparent; color: var(--accent); font-weight: 600; }
+
+/* ---------- Kontakt ---------- */
+.contact-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 28px; align-items: center; }
+@media (min-width: 900px) { .contact-grid { grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr); gap: 56px; } }
+.contact-title { font-size: clamp(2.6rem, 7vw, 5.6rem); font-weight: 800; line-height: .95; letter-spacing: -.045em; }
+.contact-side { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.contact-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.contact-list li {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; min-width: 0;
+  padding: 16px 18px; border-radius: 14px; background: var(--surface); border: 1px solid var(--line);
+  transition: border-color .2s, transform .2s;
+}
+.contact-list li:hover { border-color: var(--accent); transform: translateX(4px); }
+.cl-label { flex: none; width: 72px; font-family: var(--font-mono); font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.cl-value { flex: 1; min-width: 0; font-weight: 600; color: var(--ink); text-decoration-line: none; overflow-wrap: anywhere; }
+a.cl-value:hover { color: var(--accent); }
+.cl-value.todo { text-decoration: underline dashed var(--gold) 1.5px; text-underline-offset: 4px; }
+.btn-small { padding: 6px 10px; border-radius: 8px; border: 1px solid var(--line); background: var(--surface-2); font-family: var(--font-mono); font-size: .74rem; }
+.btn-small:hover { border-color: var(--accent); color: var(--accent); }
+
+/* ---------- Navigation unten ---------- */
+.navbar {
+  flex: none; display: flex; align-items: center; justify-content: center; gap: 14px;
+  padding-block: 8px 14px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.navbtn {
+  width: 46px; height: 46px; display: grid; place-items: center; border-radius: 50%;
+  border: 1px solid var(--line); background: var(--surface); color: var(--ink);
+  transition: background .2s, color .2s, opacity .2s, border-color .2s;
+}
+.navbtn:hover:not(:disabled) { background: var(--accent); color: var(--on-accent); border-color: transparent; }
+.navbtn:disabled { opacity: .35; cursor: default; }
+.dots { display: flex; align-items: center; }
+.dot { width: 22px; height: 32px; padding: 0; border: 0; background: none; display: grid; place-items: center; transition: width .3s; }
+.dot::before { content: ""; width: 8px; height: 8px; border-radius: 99px; background: var(--line); transition: width .3s, background .3s; }
+.dot[aria-current="true"] { width: 36px; }
+.dot[aria-current="true"]::before { width: 26px; background: var(--accent); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .001ms !important; animation-delay: 0s !important; animation-iteration-count: 1 !important;
+    transition-duration: .001ms !important; scroll-behavior: auto !important;
+  }
+}
+</style>
+</head>
+<body>
+
+<div class="app">
+  <header class="topbar">
+    <button class="brand" id="brand" type="button" aria-label="Zum Anfang">
+      <span class="brand-mark" aria-hidden="true">MSK</span>
+      <span class="brand-name">Mannmeet Singh Khasria</span>
+    </button>
+    <p class="progress"><b id="count">01</b><span>/ 07</span><span class="progress-label" id="count-label">Hallo</span></p>
+  </header>
+
+  <main class="deck" id="deck" aria-label="Portfolio – nach links swipen für mehr">
+
+    <!-- 1 · Hallo -->
+    <section class="panel hero" id="hallo" data-title="Hallo" aria-label="Hallo">
+      <div class="panel-inner">
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <p class="eyebrow">// developer aus düren</p>
+            <h1 class="name" id="hero-name" aria-label="Mannmeet Singh Khasria"><span class="name-line">Mannmeet</span> <span class="name-line last">Singh</span> <span class="name-line last">Khasria</span></h1>
+            <p class="hero-lead">Informatik-Student an der <strong>FH Aachen</strong> und Werkstudent bei <strong>SOPTIM</strong>. Gerade baue ich an einer Security-App mit Flutter und Spring Boot und programmiere einen Roboterarm in C.</p>
+            <div class="cta-row">
+              <button class="btn-primary" type="button" data-go="1">
+                Portfolio ansehen
+                <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+              <span class="swipe-hint" aria-hidden="true"><span class="sh-track"><span class="sh-dot"></span></span><span id="sh-text">oder nach links swipen</span></span>
+            </div>
+          </div>
+          <div class="code-card terminal" data-cursor="Swipe" aria-hidden="true">
+            <div class="code-head"><i></i><i></i><i></i><span>~/portfolio</span></div>
+            <div class="term-body" id="term">
+              <div><span class="t-prompt">$ </span><span class="t-cmd">whoami</span></div>
+              <div class="t-out">Mannmeet Singh Khasria · Düren</div>
+              <div><span class="t-prompt">$ </span><span class="t-cmd">cat fokus.txt</span></div>
+              <div class="t-out t-tight"><span class="t-hash">datenschild</span>   Security-App · Flutter/Spring</div>
+              <div class="t-out"><span class="t-hash">picknplace</span>    Roboterarm · C/Webots</div>
+              <div><span class="t-prompt">$ </span><span class="t-cmd">./weiter.sh</span></div>
+              <div class="t-out t-hl">Swipe, scroll oder drück → für mehr</div>
+              <div><span class="t-prompt">$ </span><span class="t-caret"></span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2 · Über mich -->
+    <section class="panel" id="ueber-mich" data-title="Über mich" aria-label="Über mich">
+      <div class="panel-inner">
+        <div class="about">
+          <div class="stack">
+            <p class="eyebrow">// über mich</p>
+            <h2 class="h2">Code, der in der echten Welt etwas bewegt.</h2>
+            <p class="lead">Ich bin Mannmeet und studiere Informatik an der <strong>FH Aachen</strong>. Nebenbei arbeite ich als Werkstudent bei der <strong>SOPTIM AG</strong>: Dort baue ich mit Java, Kotlin und TypeScript an Software für die Energiewirtschaft mit.</p>
+            <p class="lead">Die meiste Zeit stecke ich gerade in zwei eigene Projekte: <strong>Datenschild</strong>, eine Security-App mit verschlüsseltem Spring-Boot-Backend, und eine <strong>Pick-and-Place-Simulation</strong>, in der ein UR5e-Roboterarm mit eigener Kinematik in C Teile umsetzt.</p>
+          </div>
+          <div class="code-card">
+            <div class="code-head"><i></i><i></i><i></i><span>jetzt.json</span></div>
+<pre><code><span class="p">{</span>
+  <span class="k">"basis"</span><span class="p">:</span> <span class="s">"Düren"</span><span class="p">,</span>
+  <span class="k">"studium"</span><span class="p">:</span> <span class="s">"Informatik @ FH Aachen"</span><span class="p">,</span>
+  <span class="k">"job"</span><span class="p">:</span> <span class="s">"Werkstudent @ SOPTIM"</span><span class="p">,</span>
+  <span class="k">"baut_gerade"</span><span class="p">: [</span><span class="s">"Datenschild"</span><span class="p">,</span> <span class="s">"pickNplace"</span><span class="p">],</span>
+  <span class="k">"stack"</span><span class="p">: [</span>
+    <span class="s">"Java"</span><span class="p">,</span> <span class="s">"Kotlin"</span><span class="p">,</span> <span class="s">"TypeScript"</span><span class="p">,</span> <span class="s">"Python"</span>
+  <span class="p">]</span>
+<span class="p">}</span></code></pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3 · Projekte -->
+    <section class="panel" id="projekte" data-title="Projekte" aria-label="Projekte">
+      <div class="panel-inner">
+        <div class="stack">
+          <p class="eyebrow">// projekte</p>
+          <h2 class="h2">Woran ich gerade baue</h2>
+        </div>
+        <div class="feature-grid">
+          <article class="feature">
+            <p class="proj-top"><span>Security-App · iOS, Android + Backend</span><span>Flutter + Spring Boot</span></p>
+            <h3>Datenschild</h3>
+            <p>Prüft, ob E-Mail-Adressen oder Passwörter in Datenlecks auftauchen, und zeigt konkrete nächste Schritte. Leitidee: so wenig Daten wie möglich speichern, und die verschlüsselt.</p>
+            <p class="under-hood">Unter der Haube</p>
+            <ul class="hood">
+              <li>Passwort-Check per <strong>k-Anonymität</strong>: Nur 5 Zeichen des Hashes (plus Padding) verlassen das Gerät.</li>
+              <li>Überwachte Adressen liegen <strong>AES-256-GCM</strong>-verschlüsselt in der Datenbank, gesucht wird über einen HMAC-Index.</li>
+              <li>Tokens und Bestätigungscodes nur als Hash, Vergleich in konstanter Zeit, Rate-Limits mit <em>fail closed</em> und Security-Header (CSP, HSTS).</li>
+              <li>REST-API unter <code>/api/v1</code>, täglicher Monitoring-Job und austauschbare Leak-Quellen (HIBP, XposedOrNot).</li>
+            </ul>
+            <div class="tech"><span>Flutter</span><span>Dart</span><span>Spring Boot 3.5</span><span>Java 21</span><span>PostgreSQL</span><span>JPA</span><span>GitHub Actions</span><span>CodeQL</span></div>
+            <a class="proj-link" href="https://github.com/mannmeet04/Datenschild" target="_blank" rel="noopener">Code auf GitHub <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+          </article>
+          <article class="feature">
+            <p class="proj-top"><span>Robotik · Webots-Simulation</span><span>C</span></p>
+            <h3>Pick and Place mit UR5e</h3>
+            <p>Ein UR5e-Roboterarm mit Robotiq-3F-Greifer setzt Teile von einer Station in eine Ablage mit sechs Plätzen um, ähnlich wie beim Wafer-Handling. Komplett in C, rund 1.200 Zeilen.</p>
+            <div class="stats">
+              <div><strong>9,3 s</strong><span>pro Teil im Testlauf</span></div>
+              <div><strong>4</strong><span>Fehlerszenarien</span></div>
+            </div>
+            <p class="under-hood">Unter der Haube</p>
+            <ul class="hood">
+              <li>Eigene <strong>Rückwärtskinematik</strong>: Der Greifer zeigt immer senkrecht nach unten, Schulter und Ellbogen werden als Zweigelenk-Problem per Kosinussatz gelöst, inklusive Seitenversatz des UR5e.</li>
+              <li><strong>Zustandsautomat</strong> von <code>BEREIT</code> über <code>GREIFEN</code> bis <code>ABLEGEN</code>, mit Fehlerzustand bei Leergriff, verlorenem Teil, Timeout oder voller Ablage.</li>
+              <li>Greif-Kontrolle über die Fingerstellung (rund 0,36 rad mit Teil, 1,0 rad ohne) und ein Distanzsensor in der Hand, der Teile erkennt und ihre Höhe misst.</li>
+              <li>Ein zweiter Controller als <strong>Supervisor</strong> legt Teile nach Szenario (normal, Pause, verschwindet, rutschig) und prüft automatisch das Ergebnis. Dazu Kinematik-Tests und Läufe ohne Fenster.</li>
+            </ul>
+            <div class="tech"><span>C</span><span>Webots</span><span>UR5e</span><span>Robotiq 3F</span><span>Make</span><span>PowerShell</span></div>
+            <a class="proj-link" href="https://github.com/mannmeet04/pickNplace" target="_blank" rel="noopener">Code auf GitHub <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4 · GitHub -->
+    <section class="panel" id="github" data-title="GitHub" aria-label="Weitere Repos auf GitHub">
+      <div class="panel-inner">
+        <div class="stack">
+          <p class="eyebrow">// github</p>
+          <h2 class="h2">Mehr auf GitHub</h2>
+          <p class="lead">Kleinere Projekte und Uni-Praktika.</p>
+        </div>
+        <div class="repo-grid">
+          <a class="repo" href="https://github.com/mannmeet04/Weather" target="_blank" rel="noopener">
+            <span class="repo-name"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 13.5v-11A1.5 1.5 0 0 1 4.5 1H13v11H4.5A1.5 1.5 0 0 0 3 13.5zm0 0A1.5 1.5 0 0 0 4.5 15H13v-3" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>Weather</span>
+            <p>ETL-Pipeline: holt stündlich Wetterdaten für fünf deutsche Städte, bereinigt sie und speichert sie in PostgreSQL. Läuft komplett in Docker.</p>
+            <span class="repo-meta"><span class="lang" style="--lang: #3572A5">Python</span><span>Docker</span></span>
+          </a>
+          <a class="repo" href="https://github.com/mannmeet04/robot_simulation" target="_blank" rel="noopener">
+            <span class="repo-name"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 13.5v-11A1.5 1.5 0 0 1 4.5 1H13v11H4.5A1.5 1.5 0 0 0 3 13.5zm0 0A1.5 1.5 0 0 0 4.5 15H13v-3" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>robot_simulation</span>
+            <p>ROS-2-Nodes für einen simulierten Spot in Webots: Linienfolger mit PID-Regler, ArUco-Marker und YOLOv8.</p>
+            <span class="repo-meta"><span class="lang" style="--lang: #3572A5">Python</span><span>Robotik-Praktikum</span></span>
+          </a>
+          <a class="repo" href="https://github.com/mannmeet04/AVR-C-Code" target="_blank" rel="noopener">
+            <span class="repo-name"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 13.5v-11A1.5 1.5 0 0 1 4.5 1H13v11H4.5A1.5 1.5 0 0 0 3 13.5zm0 0A1.5 1.5 0 0 0 4.5 15H13v-3" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>AVR-C-Code</span>
+            <p>ATmega328P direkt über Register programmiert, ohne Arduino-Bibliotheken. Dazu Threads, Mutex und Semaphoren in C++.</p>
+            <span class="repo-meta"><span class="lang" style="--lang: #555555">C</span><span>Uni-Praktikum</span></span>
+          </a>
+          <a class="repo repo-all" href="https://github.com/mannmeet04" target="_blank" rel="noopener">
+            <strong>Alle Repos</strong>
+            <span class="proj-link">github.com/mannmeet04 <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5 · Hackathons -->
+    <section class="panel" id="hackathons" data-title="Hackathons" aria-label="Hackathons und Erfolge">
+      <div class="panel-inner">
+        <div class="stack">
+          <p class="eyebrow">// hackathons</p>
+          <h2 class="h2">Unter Zeitdruck gebaut</h2>
+        </div>
+        <div class="hack-grid">
+          <article class="hack">
+            <span class="hack-badge"><svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="9" r="6" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M8.6 14.2L7 21l5-2.6 5 2.6-1.6-6.8" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/></svg> ElevenLabs-Preis</span>
+            <p class="proj-top"><span>Healthcare Hackathon</span><span>Juli 2026</span></p>
+            <h3>KI-Sprachassistent für Bettenmanagement</h3>
+            <p>Ärztinnen und Ärzte verwalten und verteilen Patientenbetten per Sprachbefehl. Dazu ein Echtzeit-Dashboard mit 3D-Gebäudeansicht aller Zimmer, entwickelt im Team aus Entwicklern und Ärzten.</p>
+            <div class="stats">
+              <div><strong>49</strong><span>API-Endpunkte</span></div>
+              <div><strong>100+</strong><span>automatisierte Tests</span></div>
+            </div>
+            <div class="tech"><span>ElevenLabs API</span><span>TypeScript</span><span>Bun</span><span>Elysia</span><span>Drizzle ORM</span><span>SQLite</span><span>React</span><span>Docker</span></div>
+            <a class="proj-link" href="https://github.com/mannmeet04/Healthcare-Hackathon" target="_blank" rel="noopener">Code auf GitHub <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+          </article>
+          <article class="hack">
+            <span class="hack-badge"><svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="9" r="6" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M8.6 14.2L7 21l5-2.6 5 2.6-1.6-6.8" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/></svg> Top 5</span>
+            <p class="proj-top"><span>bonding x itestra Hackathon</span><span>Aachen</span></p>
+            <h3>Echtzeit-Bot für Multiplayer-Snake</h3>
+            <p>Ein Java-Bot, der live gegen andere Bots antritt: schnelles Wachstum, Vorhersage gegnerischer Züge und laufende Anpassung an Spielregeln, die sich jede Runde ändern.</p>
+            <div class="stats">
+              <div><strong>24 h</strong><span>Coding-Phase</span></div>
+              <div><strong>2</strong><span>Leute im Team</span></div>
+            </div>
+            <div class="tech"><span>Java</span><span>Echtzeit</span><span>Spielstrategie</span></div>
+            <a class="proj-link" href="https://github.com/mannmeet04/itestraXbonding" target="_blank" rel="noopener">Code auf GitHub <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6 · Toolbox -->
+    <section class="panel" id="toolbox" data-title="Toolbox" aria-label="Toolbox">
+      <div class="panel-inner">
+        <div class="stack">
+          <p class="eyebrow">// toolbox</p>
+          <h2 class="h2">Meine Werkzeuge</h2>
+        </div>
+        <div class="skills-grid">
+          <div class="skill-group">
+            <h3>Sprachen</h3>
+            <ul class="chips"><li>Java</li><li>Kotlin</li><li>TypeScript</li><li>Python</li><li>Dart</li><li>C</li><li>C++</li><li>C#</li><li>SQL</li><li>PHP</li></ul>
+          </div>
+          <div class="skill-group">
+            <h3>Frameworks &amp; Plattformen</h3>
+            <ul class="chips"><li>Spring Boot</li><li>Flutter</li><li>React</li><li>Node.js</li><li>JavaFX</li><li>.NET</li><li>ROS 2</li><li>Webots</li></ul>
+          </div>
+          <div class="skill-group">
+            <h3>Datenbanken</h3>
+            <ul class="chips"><li>PostgreSQL</li><li>SQLite</li><li>MySQL</li><li>MongoDB</li><li>Redis</li></ul>
+          </div>
+          <div class="skill-group">
+            <h3>Tools &amp; Infrastruktur</h3>
+            <ul class="chips"><li>Docker</li><li>Git</li><li>GitHub Actions</li><li>Linux</li><li>Maven</li></ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7 · Kontakt -->
+    <section class="panel contact" id="kontakt" data-title="Kontakt" aria-label="Kontakt">
+      <div class="panel-inner">
+        <div class="contact-grid">
+          <div class="stack">
+            <p class="eyebrow">// kontakt</p>
+            <h2 class="h2 contact-title">Sag hallo.</h2>
+            <p class="lead">Lust auf einen Austausch über Code, Robotik oder ein spannendes Projekt? Schreib mir auf LinkedIn oder per Mail.</p>
+          </div>
+          <div class="contact-side">
+            <ul class="contact-list">
+              <li><span class="cl-label">LinkedIn</span><a class="cl-value" href="https://www.linkedin.com/in/mannmeet-singh-khasria" target="_blank" rel="noopener">linkedin.com/in/mannmeet-singh-khasria</a></li>
+              <li><span class="cl-label">GitHub</span><a class="cl-value" href="https://github.com/mannmeet04" target="_blank" rel="noopener">github.com/mannmeet04</a></li>
+              <li><span class="cl-label">E-Mail</span><a class="cl-value" id="mail" href="mailto:mannmeetsingh2004@gmail.com">mannmeetsingh2004@gmail.com</a><button class="btn-small" id="copy-mail" type="button">Kopieren</button></li>
+              <li><span class="cl-label">Ort</span><span class="cl-value">Düren, Deutschland</span></li>
+            </ul>
+            <div><button class="btn-ghost" type="button" data-go="0">
+              <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.4-5.7M4 4v4.5h4.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Nochmal von vorn
+            </button></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <nav class="navbar" aria-label="Kapitel">
+    <button class="navbtn" id="prev" type="button" aria-label="Zurück">
+      <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <div class="dots" id="dots"></div>
+    <button class="navbtn" id="next" type="button" aria-label="Weiter">
+      <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </nav>
+</div>
+
+<div class="cursor is-hidden" id="cursor" aria-hidden="true"><div class="cursor-ring"><span class="cursor-label"></span></div><div class="cursor-dot"></div></div>
+
+<script>
+(() => {
+  const root = document.documentElement;
+  root.lang = 'de';
+  root.classList.add('js');
+
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const coarse = matchMedia('(pointer: coarse)').matches;
+  const fine = matchMedia('(hover: hover) and (pointer: fine)').matches;
+  const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+  const $ = (s, el = document) => el.querySelector(s);
+  const $$ = (s, el = document) => Array.from(el.querySelectorAll(s));
+
+  const deck = $('#deck');
+  const panels = $$('.panel', deck);
+  const dotsWrap = $('#dots');
+  const prevBtn = $('#prev');
+  const nextBtn = $('#next');
+  const countEl = $('#count');
+  const countLabel = $('#count-label');
+  let index = -1;
+  let target = 0;
+  let dragging = false;
+
+  /* ---------- Terminal tippt die Begrüßung ---------- */
+  const term = $('#term');
+  const steps = [
+    { cmd: 'whoami', out: 'Mannmeet Singh Khasria · Düren' },
+    { cmd: 'cat fokus.txt', out: ['datenschild   Security-App · Flutter/Spring', 'picknplace    Roboterarm · C/Webots'] },
+    { cmd: './weiter.sh', out: coarse ? 'Swipe nach links für mehr →' : 'Swipe, scroll oder drück → für mehr', hl: true },
+  ];
+  function el(tag, cls, text) {
+    const n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (text) n.textContent = text;
+    return n;
+  }
+  function cmdLine(text) {
+    const row = el('div');
+    const cmd = el('span', 't-cmd', text);
+    row.append(el('span', 't-prompt', '$ '), cmd);
+    term.appendChild(row);
+    return cmd;
+  }
+  function outLine(s) {
+    const lines = Array.isArray(s.out) ? s.out : [s.out];
+    lines.forEach((text, i) => {
+      const row = el('div', 't-out' + (s.hl ? ' t-hl' : '') + (i < lines.length - 1 ? ' t-tight' : ''));
+      const m = /^(\S+)( {2,}.*)$/.exec(text);
+      if (m) row.append(el('span', 't-hash', m[1]), document.createTextNode(m[2]));
+      else row.textContent = text;
+      term.appendChild(row);
+    });
+  }
+  function promptLine() {
+    const row = el('div');
+    row.append(el('span', 't-prompt', '$ '), el('span', 't-caret'));
+    term.appendChild(row);
+  }
+  async function typeTerminal() {
+    term.textContent = '';
+    if (reduce) { steps.forEach((s) => { cmdLine(s.cmd); outLine(s); }); promptLine(); return; }
+    for (const s of steps) {
+      const cmd = cmdLine('');
+      const caret = el('span', 't-caret');
+      cmd.after(caret);
+      await sleep(380);
+      for (const ch of s.cmd) { cmd.textContent += ch; await sleep(48 + Math.random() * 45); }
+      await sleep(240);
+      caret.remove();
+      outLine(s);
+    }
+    promptLine();
+    document.body.classList.add('hint-pulse');
+  }
+  setTimeout(typeTerminal, reduce ? 0 : 750);
+  $('#sh-text').textContent = coarse ? 'oder nach links swipen' : 'oder swipen und scrollen';
+
+  /* ---------- Eigener Cursor ---------- */
+  const cursor = $('#cursor');
+  let refreshCursor = () => {};
+  let lastTarget = null;
+  if (fine) {
+    root.classList.add('has-cursor');
+    const ring = $('.cursor-ring', cursor);
+    const dot = $('.cursor-dot', cursor);
+    const label = $('.cursor-label', cursor);
+    let mx = -200, my = -200, rx = -200, ry = -200, seen = false;
+    refreshCursor = (t) => {
+      const node = t && t.closest ? t : null;
+      const link = node && node.closest('a[href], button:not(:disabled)');
+      const lab = node && node.closest('[data-cursor]');
+      const lens = node && node.closest('#hero-name');
+      const text = dragging ? 'Ziehen' : (!link && lab ? lab.dataset.cursor : '');
+      cursor.classList.toggle('is-link', !!link && !dragging);
+      cursor.classList.toggle('is-lens', !!lens && !dragging);
+      cursor.classList.toggle('is-label', !!text);
+      if (text) label.textContent = text;
+    };
+    window.addEventListener('pointermove', (e) => {
+      if (e.pointerType !== 'mouse') return;
+      mx = e.clientX; my = e.clientY;
+      if (!seen) { seen = true; rx = mx; ry = my; }
+      cursor.classList.remove('is-hidden');
+      lastTarget = e.target;
+      refreshCursor(e.target);
+    }, { passive: true });
+    root.addEventListener('mouseleave', () => cursor.classList.add('is-hidden'));
+    window.addEventListener('pointerdown', (e) => { if (e.pointerType === 'mouse') cursor.classList.add('is-down'); });
+    window.addEventListener('pointerup', () => cursor.classList.remove('is-down'));
+    (function loop() {
+      const k = reduce ? 1 : 0.2;
+      rx += (mx - rx) * k;
+      ry += (my - ry) * k;
+      dot.style.transform = 'translate3d(' + mx + 'px,' + my + 'px,0)';
+      ring.style.transform = 'translate3d(' + rx.toFixed(1) + 'px,' + ry.toFixed(1) + 'px,0)';
+      requestAnimationFrame(loop);
+    })();
+  }
+
+  /* ---------- Name reagiert auf den Cursor ---------- */
+  const chars = [];
+  $$('.name-line').forEach((line) => {
+    const text = line.textContent;
+    line.textContent = '';
+    for (const ch of text) {
+      const span = el('span', 'ch', ch);
+      span.setAttribute('aria-hidden', 'true');
+      line.appendChild(span);
+      chars.push({ el: span, w: 800 });
+    }
+  });
+  let px = -9999, py = -9999, nameRaf = 0;
+  function nameLoop() {
+    let busy = false;
+    for (const c of chars) {
+      const r = c.el.getBoundingClientRect();
+      const d = Math.hypot(px - (r.left + r.width / 2), py - (r.top + r.height / 2));
+      const f = Math.max(0, 1 - d / 230);
+      const goal = 800 - 580 * f * f * (3 - 2 * f);
+      const next = c.w + (goal - c.w) * 0.16;
+      if (Math.abs(goal - c.w) > 0.5) {
+        c.w = next;
+        c.el.style.fontVariationSettings = '"wght" ' + next.toFixed(0);
+        busy = true;
+      }
+    }
+    nameRaf = busy ? requestAnimationFrame(nameLoop) : 0;
+  }
+  if (fine && !reduce) {
+    window.addEventListener('pointermove', (e) => {
+      if (e.pointerType !== 'mouse') return;
+      px = e.clientX; py = e.clientY;
+      if (!nameRaf) nameRaf = requestAnimationFrame(nameLoop);
+    }, { passive: true });
+    root.addEventListener('mouseleave', () => {
+      px = py = -9999;
+      if (!nameRaf) nameRaf = requestAnimationFrame(nameLoop);
+    });
+  }
+
+  /* ---------- Deck-Navigation ---------- */
+  panels.forEach((p, i) => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'dot';
+    b.setAttribute('aria-label', p.dataset.title + ' (' + (i + 1) + ' von ' + panels.length + ')');
+    b.addEventListener('click', () => go(i));
+    dotsWrap.appendChild(b);
+  });
+  const dots = $$('.dot', dotsWrap);
+
+  function go(i, instant) {
+    target = Math.max(0, Math.min(panels.length - 1, i));
+    deck.scrollTo({ left: target * deck.clientWidth, behavior: instant || reduce ? 'auto' : 'smooth' });
+  }
+
+  function setActive(i) {
+    if (i === index) return;
+    index = i;
+    panels.forEach((p, j) => p.classList.toggle('is-active', j === i));
+    dots.forEach((d, j) => d.setAttribute('aria-current', j === i ? 'true' : 'false'));
+    countEl.textContent = String(i + 1).padStart(2, '0');
+    countLabel.textContent = panels[i].dataset.title;
+    prevBtn.disabled = i === 0;
+    nextBtn.disabled = i === panels.length - 1;
+    try { history.replaceState(null, '', '#' + panels[i].id); } catch (err) { /* Hash ist optional */ }
+  }
+
+  let dragPending = false;
+  function settle() {
+    if (dragPending) { deck.classList.remove('dragging'); dragPending = false; }
+    target = index;
+    panels.forEach((p, j) => p.classList.toggle('is-settled', j === index));
+  }
+
+  let scrollRaf = 0, settleT = 0;
+  deck.addEventListener('scroll', () => {
+    if (!scrollRaf) {
+      scrollRaf = requestAnimationFrame(() => {
+        scrollRaf = 0;
+        setActive(Math.round(deck.scrollLeft / Math.max(1, deck.clientWidth)));
+        if (lastTarget) refreshCursor(lastTarget);
+      });
+    }
+    clearTimeout(settleT);
+    settleT = setTimeout(settle, 140);
+  }, { passive: true });
+
+  prevBtn.addEventListener('click', () => go(target - 1));
+  nextBtn.addEventListener('click', () => go(target + 1));
+  $('#brand').addEventListener('click', () => go(0));
+  $$('[data-go]').forEach((b) => b.addEventListener('click', () => go(Number(b.dataset.go))));
+
+  window.addEventListener('keydown', (e) => {
+    if (e.altKey || e.ctrlKey || e.metaKey) return;
+    if (e.target.closest && e.target.closest('input, textarea, [contenteditable]')) return;
+    if (e.key === 'ArrowRight') { e.preventDefault(); go(target + 1); }
+    else if (e.key === 'ArrowLeft') { e.preventDefault(); go(target - 1); }
+    else if (e.key === 'Home') { e.preventDefault(); go(0); }
+    else if (e.key === 'End') { e.preventDefault(); go(panels.length - 1); }
+  });
+
+  /* Mausrad: erst im Kapitel scrollen, dann zum nächsten Kapitel */
+  let wheelLock = 0, wheelAcc = 0;
+  deck.addEventListener('wheel', (e) => {
+    if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) return;
+    const p = panels[index];
+    const down = e.deltaY > 0;
+    const canScroll = down ? p.scrollTop + p.clientHeight < p.scrollHeight - 2 : p.scrollTop > 2;
+    if (canScroll) return;
+    e.preventDefault();
+    const now = Date.now();
+    if (now < wheelLock) return;
+    wheelAcc += e.deltaY;
+    if (Math.abs(wheelAcc) > 30) {
+      go(target + Math.sign(wheelAcc));
+      wheelAcc = 0;
+      wheelLock = now + 850;
+    }
+  }, { passive: false });
+
+  /* Mit der Maus ziehen = swipen */
+  let drag = null;
+  deck.addEventListener('pointerdown', (e) => {
+    if (e.pointerType !== 'mouse' || e.button !== 0) return;
+    if (e.target.closest('a, button, input, pre, .contact-list')) return;
+    drag = { x: e.clientX, left: deck.scrollLeft, start: index, moved: false };
+  });
+  window.addEventListener('pointermove', (e) => {
+    if (!drag) return;
+    const dx = e.clientX - drag.x;
+    if (!drag.moved && Math.abs(dx) > 6) {
+      drag.moved = true;
+      dragging = true;
+      deck.classList.add('dragging');
+      refreshCursor(e.target);
+      try { window.getSelection().removeAllRanges(); } catch (err) { /* egal */ }
+    }
+    if (drag.moved) deck.scrollLeft = drag.left - dx;
+  });
+  window.addEventListener('pointerup', (e) => {
+    if (!drag) return;
+    const d = drag;
+    drag = null;
+    if (!d.moved) return;
+    dragging = false;
+    refreshCursor(e.target);
+    const dx = e.clientX - d.x;
+    dragPending = true;
+    go(Math.abs(dx) > 50 ? d.start - Math.sign(dx) : d.start);
+  });
+
+  window.addEventListener('resize', () => {
+    if (index < 0) return;
+    deck.style.scrollBehavior = 'auto';
+    deck.scrollLeft = index * deck.clientWidth;
+    deck.style.scrollBehavior = '';
+  });
+
+  window.addEventListener('hashchange', () => {
+    const i = panels.findIndex((p) => '#' + p.id === location.hash);
+    if (i >= 0 && i !== index) go(i);
+  });
+
+  /* Start: Hash beachten */
+  const startIdx = Math.max(0, panels.findIndex((p) => '#' + p.id === location.hash));
+  if (startIdx > 0) {
+    requestAnimationFrame(() => {
+      deck.style.scrollBehavior = 'auto';
+      deck.scrollLeft = startIdx * deck.clientWidth;
+      deck.style.scrollBehavior = '';
+      setActive(startIdx);
+      settle();
+    });
+  } else {
+    setActive(0);
+    settle();
+  }
+
+  /* ---------- E-Mail kopieren ---------- */
+  $('#copy-mail').addEventListener('click', (e) => {
+    const btn = e.currentTarget;
+    const mail = $('#mail');
+    const text = mail.textContent.trim();
+    const done = (label) => { btn.textContent = label; setTimeout(() => { btn.textContent = 'Kopieren'; }, 1800); };
+    const fallback = () => {
+      const r = document.createRange();
+      r.selectNodeContents(mail);
+      const s = window.getSelection();
+      s.removeAllRanges();
+      s.addRange(r);
+      done('Markiert');
+    };
+    try {
+      navigator.clipboard.writeText(text).then(() => done('Kopiert'), fallback);
+    } catch (err) { fallback(); }
+  });
+
+})();
+</script>
+</body>
+</html>
