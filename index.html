@@ -15,7 +15,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
 <style>
 :root {
-  /* Layout: horizontales Swipe-Deck, ein Kapitel pro Bildschirm. Start = großer Name, der auf den Cursor reagiert, plus tippendes Terminal. */
+  
   --bg: #ECEEF4;
   --dot: #D5D9E6;
   --surface: #FFFFFF;
@@ -38,8 +38,7 @@
   --font-display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
   --font-body: "Figtree", "Segoe UI", system-ui, -apple-system, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "Cascadia Code", Consolas, monospace;
-
-  /* Bon-Papier: in beiden Themes gleich */
+  
   --paper: #FFFDF7; --paper-ink: #1B1B1F;
 }
 @media (prefers-color-scheme: dark) {
@@ -71,7 +70,6 @@ button { font: inherit; color: inherit; cursor: pointer; }
 
 .app { height: 100%; display: flex; flex-direction: column; }
 
-/* ---------- Eigener Cursor (nur mit Maus) ---------- */
 .cursor { position: fixed; inset: 0; z-index: 50; pointer-events: none; display: none; transition: opacity .2s; }
 .has-cursor .cursor { display: block; }
 .has-cursor, .has-cursor * { cursor: none !important; }
@@ -97,7 +95,6 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .cursor.is-label .cursor-dot { opacity: 0; }
 .cursor.is-down .cursor-ring { scale: .86; }
 
-/* ---------- Kopfzeile ---------- */
 .topbar {
   flex: none; display: flex; align-items: center; justify-content: space-between; gap: 12px;
   padding-block: 12px 4px;
@@ -121,7 +118,6 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .progress-label { margin-left: 6px; padding-left: 10px; border-left: 1px solid var(--line); color: var(--ink); }
 @media (max-width: 420px) { .progress-label { display: none; } }
 
-/* ---------- Deck ---------- */
 .deck {
   flex: 1; min-height: 0; display: flex;
   overflow-x: auto; overflow-y: hidden;
@@ -144,7 +140,6 @@ button { font: inherit; color: inherit; cursor: pointer; }
   display: flex; flex-direction: column; justify-content: center; gap: clamp(20px, 3vw, 34px);
 }
 
-/* ---------- Typo ---------- */
 .eyebrow { margin: 0; font-family: var(--font-mono); font-size: .82rem; font-weight: 500; color: var(--accent); letter-spacing: .02em; }
 .h2 {
   margin: 0; font-family: var(--font-display); font-weight: 700;
@@ -155,7 +150,6 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .stack { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
 .todo { text-decoration: underline dashed var(--gold) 1.5px; text-underline-offset: 4px; }
 
-/* ---------- Start ---------- */
 .hero-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 28px; align-items: center; }
 @media (min-width: 900px) { .hero-grid { grid-template-columns: minmax(0, 1.2fr) minmax(0, .8fr); gap: clamp(32px, 5vw, 72px); } }
 .hero-copy { display: flex; flex-direction: column; gap: 20px; min-width: 0; }
@@ -224,7 +218,6 @@ button { font: inherit; color: inherit; cursor: pointer; }
   70% { transform: translateX(-30px); opacity: 1; } 100% { transform: translateX(-30px); opacity: 0; }
 }
 
-/* ---------- Über mich ---------- */
 .about { display: grid; grid-template-columns: minmax(0, 1fr); gap: 28px; align-items: center; }
 @media (min-width: 900px) { .about { grid-template-columns: minmax(0, 1.12fr) minmax(0, .88fr); gap: 56px; } }
 .code-card {
@@ -248,7 +241,6 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .code-card .s { color: var(--code-str); }
 .code-card .p { color: var(--code-dim); }
 
-/* ---------- Projekte ---------- */
 .proj-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; }
 @media (min-width: 760px) { .proj-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 .proj, .hack {
@@ -271,7 +263,6 @@ button { font: inherit; color: inherit; cursor: pointer; }
 }
 .proj-link:hover { text-decoration-line: underline; text-underline-offset: 3px; }
 
-/* ---------- Projekte im Detail ---------- */
 .feature-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; }
 @media (min-width: 900px) { .feature-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 .feature { min-width: 0; display: flex; flex-direction: column; gap: 12px; padding: 24px; border-radius: 22px; background: var(--surface); border: 1px solid var(--line); }
@@ -288,7 +279,6 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .hood code { font-family: var(--font-mono); font-size: .84em; padding: 1px 5px; border-radius: 5px; background: var(--surface-2); }
 .repo-private { margin-top: auto; padding-top: 4px; display: inline-flex; align-items: center; gap: 6px; font-family: var(--font-mono); font-size: .76rem; color: var(--muted); }
 
-/* ---------- GitHub ---------- */
 .repo-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; }
 @media (min-width: 640px) { .repo-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (min-width: 1000px) { .repo-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
@@ -308,7 +298,6 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .repo-all strong { font-family: var(--font-display); font-size: 1.35rem; font-weight: 700; color: var(--ink); }
 .repo-all .proj-link { margin-top: 0; padding-top: 0; }
 
-/* ---------- Hackathons ---------- */
 .hack-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; }
 @media (min-width: 860px) { .hack-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 .hack { gap: 12px; padding: 24px; border-radius: 22px; }
@@ -322,7 +311,6 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .stats strong { font-family: var(--font-display); font-size: 2rem; font-weight: 800; letter-spacing: -.03em; line-height: 1; color: var(--accent); font-variant-numeric: tabular-nums; }
 .stats span { font-size: .82rem; color: var(--muted); }
 
-/* ---------- Skills ---------- */
 .section-head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 14px 28px; }
 .legend { margin: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: .9rem; color: var(--muted); }
 .skills-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; align-items: start; }
@@ -337,7 +325,6 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .chips li, .chip-job { padding: 5px 10px; border-radius: 999px; border: 1px solid var(--line); font-family: var(--font-mono); font-size: .76rem; }
 .chips li.is-job, .chip-job { background: var(--accent-soft); border-color: transparent; color: var(--accent); font-weight: 600; }
 
-/* ---------- Kontakt ---------- */
 .contact-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 28px; align-items: center; }
 @media (min-width: 900px) { .contact-grid { grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr); gap: 56px; } }
 .contact-title { font-size: clamp(2.6rem, 7vw, 5.6rem); font-weight: 800; line-height: .95; letter-spacing: -.045em; }
@@ -356,7 +343,6 @@ a.cl-value:hover { color: var(--accent); }
 .btn-small { padding: 6px 10px; border-radius: 8px; border: 1px solid var(--line); background: var(--surface-2); font-family: var(--font-mono); font-size: .74rem; }
 .btn-small:hover { border-color: var(--accent); color: var(--accent); }
 
-/* ---------- Navigation unten ---------- */
 .navbar {
   flex: none; display: flex; align-items: center; justify-content: center; gap: 14px;
   padding-block: 8px 14px;
@@ -397,7 +383,6 @@ a.cl-value:hover { color: var(--accent); }
 
   <main class="deck" id="deck" aria-label="Portfolio – nach links swipen für mehr">
 
-    <!-- 1 · Hallo -->
     <section class="panel hero" id="hallo" data-title="Hallo" aria-label="Hallo">
       <div class="panel-inner">
         <div class="hero-grid">
@@ -430,7 +415,6 @@ a.cl-value:hover { color: var(--accent); }
       </div>
     </section>
 
-    <!-- 2 · Über mich -->
     <section class="panel" id="ueber-mich" data-title="Über mich" aria-label="Über mich">
       <div class="panel-inner">
         <div class="about">
@@ -456,7 +440,6 @@ a.cl-value:hover { color: var(--accent); }
       </div>
     </section>
 
-    <!-- 3 · Projekte -->
     <section class="panel" id="projekte" data-title="Projekte" aria-label="Projekte">
       <div class="panel-inner">
         <div class="stack">
@@ -500,7 +483,6 @@ a.cl-value:hover { color: var(--accent); }
       </div>
     </section>
 
-    <!-- 4 · GitHub -->
     <section class="panel" id="github" data-title="GitHub" aria-label="Weitere Repos auf GitHub">
       <div class="panel-inner">
         <div class="stack">
@@ -532,7 +514,6 @@ a.cl-value:hover { color: var(--accent); }
       </div>
     </section>
 
-    <!-- 5 · Hackathons -->
     <section class="panel" id="hackathons" data-title="Hackathons" aria-label="Hackathons und Erfolge">
       <div class="panel-inner">
         <div class="stack">
@@ -568,7 +549,6 @@ a.cl-value:hover { color: var(--accent); }
       </div>
     </section>
 
-    <!-- 6 · Toolbox -->
     <section class="panel" id="toolbox" data-title="Toolbox" aria-label="Toolbox">
       <div class="panel-inner">
         <div class="stack">
@@ -596,7 +576,6 @@ a.cl-value:hover { color: var(--accent); }
       </div>
     </section>
 
-    <!-- 7 · Kontakt -->
     <section class="panel contact" id="kontakt" data-title="Kontakt" aria-label="Kontakt">
       <div class="panel-inner">
         <div class="contact-grid">
@@ -659,7 +638,7 @@ a.cl-value:hover { color: var(--accent); }
   let target = 0;
   let dragging = false;
 
-  /* ---------- Terminal tippt die Begrüßung ---------- */
+  
   const term = $('#term');
   const steps = [
     { cmd: 'whoami', out: 'Mannmeet Singh Khasria · Düren' },
@@ -713,7 +692,7 @@ a.cl-value:hover { color: var(--accent); }
   setTimeout(typeTerminal, reduce ? 0 : 750);
   $('#sh-text').textContent = coarse ? 'oder nach links swipen' : 'oder swipen und scrollen';
 
-  /* ---------- Eigener Cursor ---------- */
+  
   const cursor = $('#cursor');
   let refreshCursor = () => {};
   let lastTarget = null;
@@ -755,7 +734,7 @@ a.cl-value:hover { color: var(--accent); }
     })();
   }
 
-  /* ---------- Name reagiert auf den Cursor ---------- */
+  
   const chars = [];
   $$('.name-line').forEach((line) => {
     const text = line.textContent;
@@ -796,7 +775,7 @@ a.cl-value:hover { color: var(--accent); }
     });
   }
 
-  /* ---------- Deck-Navigation ---------- */
+  
   panels.forEach((p, i) => {
     const b = document.createElement('button');
     b.type = 'button';
@@ -821,7 +800,7 @@ a.cl-value:hover { color: var(--accent); }
     countLabel.textContent = panels[i].dataset.title;
     prevBtn.disabled = i === 0;
     nextBtn.disabled = i === panels.length - 1;
-    try { history.replaceState(null, '', '#' + panels[i].id); } catch (err) { /* Hash ist optional */ }
+    try { history.replaceState(null, '', '#' + panels[i].id); } catch (err) {}
   }
 
   let dragPending = false;
@@ -858,7 +837,7 @@ a.cl-value:hover { color: var(--accent); }
     else if (e.key === 'End') { e.preventDefault(); go(panels.length - 1); }
   });
 
-  /* Mausrad: erst im Kapitel scrollen, dann zum nächsten Kapitel */
+  
   let wheelLock = 0, wheelAcc = 0;
   deck.addEventListener('wheel', (e) => {
     if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) return;
@@ -877,7 +856,7 @@ a.cl-value:hover { color: var(--accent); }
     }
   }, { passive: false });
 
-  /* Mit der Maus ziehen = swipen */
+  
   let drag = null;
   deck.addEventListener('pointerdown', (e) => {
     if (e.pointerType !== 'mouse' || e.button !== 0) return;
@@ -892,7 +871,7 @@ a.cl-value:hover { color: var(--accent); }
       dragging = true;
       deck.classList.add('dragging');
       refreshCursor(e.target);
-      try { window.getSelection().removeAllRanges(); } catch (err) { /* egal */ }
+      try { window.getSelection().removeAllRanges(); } catch (err) {}
     }
     if (drag.moved) deck.scrollLeft = drag.left - dx;
   });
@@ -920,7 +899,7 @@ a.cl-value:hover { color: var(--accent); }
     if (i >= 0 && i !== index) go(i);
   });
 
-  /* Start: Hash beachten */
+  
   const startIdx = Math.max(0, panels.findIndex((p) => '#' + p.id === location.hash));
   if (startIdx > 0) {
     requestAnimationFrame(() => {
@@ -935,7 +914,7 @@ a.cl-value:hover { color: var(--accent); }
     settle();
   }
 
-  /* ---------- E-Mail kopieren ---------- */
+  
   $('#copy-mail').addEventListener('click', (e) => {
     const btn = e.currentTarget;
     const mail = $('#mail');
