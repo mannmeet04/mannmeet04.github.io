@@ -104,19 +104,22 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .brand {
   display: inline-flex; align-items: center; gap: 10px; padding: 4px 12px 4px 4px; border: 0; background: none;
   border-radius: 999px; font-family: var(--font-display); font-weight: 700; font-size: 1.02rem; letter-spacing: -.01em;
+  min-width: 0;
 }
+.brand-name { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .brand-mark {
   width: 38px; height: 38px; flex: none; display: grid; place-items: center; border-radius: 50%;
   background: var(--accent); color: var(--on-accent);
   font-family: var(--font-display); font-weight: 800; font-size: .74rem; letter-spacing: -.02em;
 }
 .progress {
-  margin: 0; display: flex; align-items: baseline; gap: 6px;
+  margin: 0; display: flex; align-items: baseline; gap: 6px; flex: none; white-space: nowrap;
   font-family: var(--font-mono); font-size: .8rem; color: var(--muted); font-variant-numeric: tabular-nums;
 }
 .progress b { color: var(--ink); font-weight: 600; }
 .progress-label { margin-left: 6px; padding-left: 10px; border-left: 1px solid var(--line); color: var(--ink); }
-@media (max-width: 420px) { .progress-label { display: none; } }
+@media (max-width: 600px) { .progress-label { display: none; } }
+@media (max-width: 400px) { .brand { font-size: .94rem; } }
 
 .deck {
   flex: 1; min-height: 0; display: flex;
